@@ -12,6 +12,24 @@
         {% endblock %}
     </head>
     <body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="{{ path('app_main') }}">
+                    <img src="{{ asset('img/') }}" alt="Logo">
+                </a>
+            </div>
+            <ul class="nav-list">
+                <li><a href="{{ path('app_main') }}">Home</a></li>
+
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                {% else %}
+                    <li><a href="{{ path('app_login') }}">Se connecter</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
         {% block body %}{% endblock %}
     </body>
 </html>
