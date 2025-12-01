@@ -1,0 +1,118 @@
+:root {
+  --bg: #f5f0e1;
+  --surface: #ffffff;
+  --text: #2d1b0e;
+  --text-muted: #7a6a58;
+  --primary: #5b4033;
+  --accent: #d4a373;
+  --button-bg: #8c5e3c;
+  --button-hover: #a37049;
+  --border: #c8b89a;
+  --table-header-bg: #836953;
+  --table-row-hover: #f1efe8;
+}
+
+/* Corps de la page */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* Conteneur centré */
+.container-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 95%;
+  margin: -100px auto;
+}
+
+.container-center h2 {
+  text-align: center;
+  margin-bottom: 50px;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Conteneur principal */
+.container {
+  width: 100%;
+  background: var(--surface);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+/* Table responsive */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+/* Tableau compact */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 100px;
+  table-layout: fixed; /* rend le tableau plus compact */
+  font-size: 13px;
+}
+
+table th,
+table td {
+  padding: 6px 8px; /* réduit l’espace dans les cellules */
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  word-wrap: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+table th {
+  background: var(--table-header-bg);
+  color: var(--surface);
+  font-weight: bold;
+}
+
+/* Largeurs fixes pour les colonnes */
+table th:nth-child(1), table td:nth-child(1) { width: 40px; }   /* ID */
+table th:nth-child(2), table td:nth-child(2) { width: 120px; }  /* Nom */
+table th:nth-child(3), table td:nth-child(3) { width: 120px; }  /* Prénom */
+table th:nth-child(4), table td:nth-child(4) { width: 110px; }  /* Téléphone */
+table th:nth-child(5), table td:nth-child(5) { width: 50px; }   /* Sexe */
+table th:nth-child(6), table td:nth-child(6) { width: 150px; }  /* Note */
+table th:nth-child(7), table td:nth-child(7) { width: 60px; }   /* Action */
+
+/* Survol des lignes */
+table tr:hover {
+  background: var(--table-row-hover);
+}
+
+/* Boutons dans le tableau */
+table td form button {
+  padding: 2px 5px;
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+table td form button:hover {
+  color: var(--accent);
+}
+
+/* Lien Supprimer */
+a.supprimer {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+a.supprimer:hover {
+  color: var(--accent);
+}
