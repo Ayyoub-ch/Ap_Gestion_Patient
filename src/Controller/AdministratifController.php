@@ -103,7 +103,9 @@ final class AdministratifController extends AbstractController
         if ($request->isMethod('POST')) {
             $patient->setNom($request->request->get('nom'));
             $patient->setPrenom($request->request->get('prenom'));
-            $patient->setDateNaissance(new \DateTime($request->request->get('date_naissance')));
+            $patient->setTelephone($request->request->get('telephone'));
+            $patient->setSexe($request->request->get('sexe'));
+            $patient->setNote($request->request->get('note'));
 
             $em->flush();
 
@@ -112,7 +114,7 @@ final class AdministratifController extends AbstractController
             return $this->redirectToRoute('app_patient');
         }
 
-        return $this->render('patient/modifier.html.twig', [
+        return $this->render('administratif/modifier_patient.html.twig', [
             'patient' => $patient,
         ]);
     }   

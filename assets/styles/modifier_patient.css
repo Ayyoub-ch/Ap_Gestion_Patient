@@ -1,0 +1,91 @@
+/* FORUMULAIRE AJOUT */
+/* Conteneur du formulaire */
+.form-container {
+    background: #f9f9f9;
+    padding: 20px 25px;
+    border-radius: 8px;
+    margin-bottom: 20px; /* espace entre formulaire et tableau */
+    border: 1px solid #ddd;
+    max-width: 600px;
+}
+
+/* Titre du formulaire */
+.form-container h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4em;
+    color: #333;
+}
+
+/* Champs du formulaire */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 0.95em;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* Textarea pour notes */
+textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+/* Boutons */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-start; /* alignement des boutons à gauche */
+    margin-top: 10px;
+}
+
+.form-actions .btn {
+    padding: 8px 15px;
+    font-size: 0.95em;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+    transition: background 0.2s;
+}
+
+/* Bouton Ajouter */
+.btn-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #218838;
+}
+
+/* Bouton Annuler */
+.btn-secondary {
+    background-color: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
