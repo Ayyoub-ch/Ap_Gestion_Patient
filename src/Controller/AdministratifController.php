@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Patient;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+
 
 final class AdministratifController extends AbstractController
 {
@@ -51,15 +53,69 @@ final class AdministratifController extends AbstractController
     }
 
     
-    /*Modifier un patient*/
-    #[Route('/modifierPatient/{id}', name: 'app_modifier_patient')]
-    public function modifierPatient(ManagerRegistry $doctrine, $id): Response
+    /* Ajouter un patient */
+    #[Route('/ajouterPatient', name: 'app_ajouter_patient', methods: ['POST'])]
+    public function ajouterPatient(Request $request, ManagerRegistry $doctrine): Response
     {
-        // Logique pour modifier un patient
-        return $this->render('administratif/modifier_patient.html.twig', [
-            'patientId' => $id,
+        $em = $doctrine->getManager();
+        $patient = new Patient();
+
+        // Récupération des données
+        $nom = $request->request->get('nom');
+        $prenom = $request->request->get('prenom');
+        $telephone = $request->request->get('telephone');
+        $sexe = $request->request->get('sexe');
+        $note = $request->request->get('note');
+
+        // Affectation
+        $patient->setNom($nom);
+        $patient->setPrenom($prenom);
+        $patient->setTelephone($telephone);
+        $patient->setSexe($sexe);
+        $patient->setNote($note);
+
+        // Sauvegarde
+        $em->persist($patient);
+        $em->flush();
+
+        // Message de réussite
+        $this->addFlash('success', 'Le patient a été ajouté avec succès.');
+
+        // Redirection immédiate vers la liste
+        return $this->redirectToRoute('app_patient');
+    }
+
+
+    /* Modifier un patient */
+    #[Route('/modifierPatient/{id}', name: 'app_modifier_patient', methods: ['GET', 'POST'])]
+    public function modifierPatient(Request $request, ManagerRegistry $doctrine, $id): Response
+    {
+        $repository = $doctrine->getRepository(Patient::class);
+        $em = $doctrine->getManager();
+
+        $patient = $repository->find($id);
+
+        if (!$patient) {
+            $this->addFlash('error', 'Aucun patient trouvé avec cet ID.');
+            return $this->redirectToRoute('app_patient');
+        }
+
+        if ($request->isMethod('POST')) {
+            $patient->setNom($request->request->get('nom'));
+            $patient->setPrenom($request->request->get('prenom'));
+            $patient->setDateNaissance(new \DateTime($request->request->get('date_naissance')));
+
+            $em->flush();
+
+            $this->addFlash('success', 'Le patient a été modifié avec succès.');
+
+            return $this->redirectToRoute('app_patient');
+        }
+
+        return $this->render('patient/modifier.html.twig', [
+            'patient' => $patient,
         ]);
-    }           
+    }   
 
 
 
