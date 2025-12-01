@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/patient.css') }}">
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container-center">
+    <h2>Liste des patients</h2>
+    <div class="table-responsive">
+        <table class="table-adherents">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Téléphone</th>
+                    <th>Sexe</th>
+                    <th>Note</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for patient in patients %}
+                    <tr>
+                        <td>{{ patient.id }}</td>
+                        <td>{{ patient.nom }}</td>
+                        <td>{{ patient.prenom }}</td>
+                        <td>{{ patient.telephone }}</td>
+                        <td>{{ patient.sexe }}</td>
+                        <td>{{ patient.note }}</td>
+                        <td>
+                            <form method="POST" action="{{ path('app_retirer_patient', {'id': patient.id}) }}" onsubmit="return confirm('Supprimer définitivement ?');">
+                                <button type="submit" title="Supprimer le patient" style="background: none; border: none; cursor: pointer;">
+                                    🗑️
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">Aucun patient trouvé</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

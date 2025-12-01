@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<style>
+/*Style à changer si besoin  changez juste la couleur merci */
+    .container-center {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 80vh;
+        text-align: center;
+    }
+
+    .big-button {
+        display: block;
+        padding: 20px 40px;
+        margin: 20px;
+        font-size: 24px;
+        font-weight: bold;
+        text-decoration: none;
+        color: white;
+        background-color: #007bff;
+        border-radius: 10px;
+        transition: 0.2s;
+        width: 300px;
+        text-align: center;
+    }
+
+    .big-button:hover {
+        background-color: #0056b3;
+    }
+</style>
+
+<div class="container-center">
+    <a href="{{ path('app_patients') }}" class="big-button">Gérer les patients</a>
+    <a href="{{ path('app_sejours') }}" class="big-button">Gérer les séjours</a>
+
+</div>
+{% endblock %}
