@@ -25,7 +25,7 @@ class Sejour
     #[ORM\Column(length: 50)]
     private ?string $statut_du_jour = null;
 
-    #[ORM\ManyToOne(inversedBy: 'Sejour')]
+    #[ORM\ManyToOne(inversedBy: 'sejours')]
     private ?Patient $patient = null;
 
     #[ORM\ManyToOne(inversedBy: 'sejours')]

@@ -21,8 +21,8 @@ class Patient
     #[ORM\Column(length: 50)]
     private ?string $prenom = null;
 
-    #[ORM\Column]
-    private ?int $telephone = null;
+    #[ORM\Column(length: 20)]
+    private ?string $telephone = null;
 
     #[ORM\Column(length: 50)]
     private ?string $sexe = null;
@@ -31,16 +31,17 @@ class Patient
     private ?string $note = null;
 
     #[ORM\ManyToOne(inversedBy: 'patients')]
-    private ?Localite $Localite = null;
+    private ?Localite $localite = null;
+
     /**
      * @var Collection<int, Sejour>
      */
     #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'patient')]
-    private Collection $Sejour;
+    private Collection $sejours;
 
     public function __construct()
     {
-        $this->Sejour = new ArrayCollection();
+        $this->sejours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -111,12 +112,12 @@ class Patient
 
     public function getLocalite(): ?Localite
     {
-        return $this->Localite;
+        return $this->localite;
     }
 
-    public function setLocalite(?Localite $Localite): static
+    public function setLocalite(?Localite $localite): static
     {
-        $this->Localite = $Localite;
+        $this->localite = $localite;
 
         return $this;
     }
@@ -126,13 +127,13 @@ class Patient
      */
     public function getSejour(): Collection
     {
-        return $this->Sejour;
+        return $this->sejours;
     }
 
     public function addSejour(Sejour $sejour): static
     {
-        if (!$this->Sejour->contains($sejour)) {
-            $this->Sejour->add($sejour);
+        if (!$this->sejours->contains($sejour)) {
+            $this->sejours->add($sejour);
             $sejour->setPatient($this);
         }
 
@@ -141,7 +142,7 @@ class Patient
 
     public function removeSejour(Sejour $sejour): static
     {
-        if ($this->Sejour->removeElement($sejour)) {
+        if ($this->sejours->removeElement($sejour)) {
             // set the owning side to null (unless already changed)
             if ($sejour->getPatient() === $this) {
                 $sejour->setPatient(null);
