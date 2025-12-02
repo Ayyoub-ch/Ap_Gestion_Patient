@@ -119,8 +119,6 @@ final class AdministratifController extends AbstractController
         ]);
     }   
 
-
-
     //Partie Séjour
     #[Route('/sejour', name: 'app_sejour')]
     public function sejours(): Response
