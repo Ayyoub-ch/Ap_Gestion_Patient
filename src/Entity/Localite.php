@@ -29,7 +29,7 @@ class Localite
     private Collection $patients;
 
     /**
-     * @var Collection<int, Utilisateur>
+     * @var Collection<int, User>
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'localite')]
     private Collection $utilisateurs;
@@ -97,14 +97,14 @@ class Localite
     }
 
     /**
-     * @return Collection<int, Utilisateur>
+     * @return Collection<int, User>
      */
     public function getUtilisateurs(): Collection
     {
         return $this->utilisateurs;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): static
+    public function addUtilisateur(User $utilisateur): static
     {
         if (!$this->utilisateurs->contains($utilisateur)) {
             $this->utilisateurs->add($utilisateur);
@@ -114,7 +114,7 @@ class Localite
         return $this;
     }
 
-    public function removeUtilisateur(Utilisateur $utilisateur): static
+    public function removeUtilisateur(User $utilisateur): static
     {
         if ($this->utilisateurs->removeElement($utilisateur)) {
             if ($utilisateur->getLocalite() === $this) {

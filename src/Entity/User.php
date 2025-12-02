@@ -21,6 +21,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
+    private ?Service $service = null;
+
+    #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
+    private ?Localite $localite = null;
+
     /**
      * @var list<string> The user roles
      */
@@ -112,5 +118,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
+
+        return $this;
+    }
+
+    public function getLocalite(): ?Localite
+    {
+        return $this->localite;
+    }
+
+    public function setLocalite(?Localite $localite): static
+    {
+        $this->localite = $localite;
+
+        return $this;
     }
 }

@@ -19,9 +19,9 @@ class Service
     private ?string $libelle = null;
 
     /**
-     * @var Collection<int, Utilisateur>
+     * @var Collection<int, User>
      */
-    #[ORM\OneToMany(targetEntity: Utilisateur::class, mappedBy: 'service')]
+    #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'service')]
     private Collection $utilisateurs;
 
     /**
@@ -54,14 +54,14 @@ class Service
     }
 
     /**
-     * @return Collection<int, Utilisateur>
+     * @return Collection<int, User>
      */
     public function getUtilisateurs(): Collection
     {
         return $this->utilisateurs;
     }
 
-    public function addUtilisateur(Utilisateur $utilisateur): static
+    public function addUtilisateur(User $utilisateur): static
     {
         if (!$this->utilisateurs->contains($utilisateur)) {
             $this->utilisateurs->add($utilisateur);
@@ -71,7 +71,7 @@ class Service
         return $this;
     }
 
-    public function removeUtilisateur(Utilisateur $utilisateur): static
+    public function removeUtilisateur(User $utilisateur): static
     {
         if ($this->utilisateurs->removeElement($utilisateur)) {
             // set the owning side to null (unless already changed)
