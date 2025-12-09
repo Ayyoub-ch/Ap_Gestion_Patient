@@ -95,7 +95,7 @@ class Service
     {
         if (!$this->chambres->contains($chambre)) {
             $this->chambres->add($chambre);
-            $chambre->setChambre($this);
+            $chambre->setService($this);
         }
 
         return $this;
@@ -105,8 +105,8 @@ class Service
     {
         if ($this->chambres->removeElement($chambre)) {
             // set the owning side to null (unless already changed)
-            if ($chambre->getChambre() === $this) {
-                $chambre->setChambre(null);
+            if ($chambre->getService() === $this) {
+                $chambre->setService(null);
             }
         }
 
