@@ -11,6 +11,11 @@
                 <li><a href="{{ path('app_main') }}">Accueil</a></li>
             {% endif %}
 
+            {% if is_granted('ROLE_ADMINISTRATIF') %}
+                <li><a href="{{ path('app_administratif') }}">Dashboard</a></li>
+                <li><a href="{{ path('app_sejour') }}">Séjours</a></li>
+            {% endif %}
+
             {% if is_granted('ROLE_ADMIN') %}
                 <li><a href="{{ path('app_admin_dashboard') }}">Dashboard</a></li>
                 <li><a href="{{ path('app_admin_users') }}">Utilisateurs</a></li>
