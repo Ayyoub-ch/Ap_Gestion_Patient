@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/patient.css') }}">
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2>Ajouter un patient</h2>
+        </div>
+        <div class="card-body">
+            <form action="{{ path('app_ajouter_patient') }}" method="POST" class="d-flex" style="gap: 10px; align-items: center;">
+                <input class="form-control" type="text" name="nom" placeholder="Nom" required>
+                <input class="form-control" type="text" name="prenom" placeholder="Prénom" required>
+                <input class="form-control" type="text" name="telephone" placeholder="Téléphone" required>
+
+                <select class="form-control" name="sexe" required>
+                    <option value="">Sexe</option>
+                    <option value="M">M</option>
+                    <option value="F">F</option>
+                </select>
+
+                <input class="form-control" type="text" name="note" placeholder="Note">
+
+                <button class="btn btn-primary" type="submit">
+                    Ajouter
+                </button>
+            </form>
+        </div>
+
+</div>
+
+{% endblock %}

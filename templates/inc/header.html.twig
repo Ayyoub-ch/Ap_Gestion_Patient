@@ -2,13 +2,18 @@
     <nav>
         <div class="logo">
             <a href="{{ path('app_main') }}">
-                <img src="/img/logo/logo.png" class="logo-image" alt="Logo">
+                <img src="{{ asset('img/logo/logo.png') }}" class="logo-image" alt="Logo">
             </a>
         </div>
         <ul class="nav-list">
         
             {% if is_granted('ROLE_USER') %}
                 <li><a href="{{ path('app_main') }}">Accueil</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMINISTRATIF') %}
+                <li><a href="{{ path('app_administratif') }}">Dashboard</a></li>
+                <li><a href="{{ path('app_sejour') }}">Séjours</a></li>
             {% endif %}
 
             {% if is_granted('ROLE_ADMIN') %}

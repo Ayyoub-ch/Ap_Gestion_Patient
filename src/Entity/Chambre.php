@@ -21,6 +21,10 @@ class Chambre
     #[ORM\Column]
     private ?int $nombre_lit = null;
 
+    #[ORM\ManyToOne(inversedBy: 'chambres')]
+    #[ORM\JoinColumn(name: 'chambre_id')]
+    private ?Service $service = null;
+
     /**
      * @var Collection<int, Lit>
      */
@@ -70,6 +74,19 @@ class Chambre
 
         return $this;
     }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
+
+        return $this;
+    }
+
     /**
      * @return Collection<int, Lit>
      */

@@ -1,8 +1,10 @@
 @import './colors.css';
 @import './footer.css';
 @import './mobile/footer-mobile.css';
-@import './index.css';
-@import './patient.css';
+@import './administratif/index.css';
+@import './administratif/patient.css';
+@import './administratif/sejour.css';
+
 
 html, body {
     height: 100%;
