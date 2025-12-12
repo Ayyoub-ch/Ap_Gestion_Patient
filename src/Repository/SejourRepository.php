@@ -16,6 +16,30 @@ class SejourRepository extends ServiceEntityRepository
         parent::__construct($registry, Sejour::class);
     }
 
+    public function findStartTodayService(int $serviceId) {
+        $qb = $this->createQueryBuilder('s')
+            ->join('s.patient' , 'p')->addSelect('p')
+            ->join('s.chambre', 'c')->addSelect('c')
+            ->where('s.service = :serviceId')
+            ->andWhere('s.dateDebutPrevue = :today')
+            ->setParameter('serviceId', $serviceId)
+            ->setParameter('today', new \DateTimeImmutable('today'))
+            ->orderBy('p.nom', 'ASC');
+
+        return $qb->getQuery()->getResult();
+    }
+    public function findSejourDateJour(): array 
+    {
+       $today = new \DateTime('today');
+
+       return $this->createQueryBuilder('s')
+              ->andWhere('s.date_entree <= :today')
+              ->andWhere('s.date_sortie >= :today')
+              ->setParameter('today', $today)
+              ->getQuery()
+              ->getResult();
+    }
+    
     //    /**
     //     * @return Sejour[] Returns an array of Sejour objects
     //     */

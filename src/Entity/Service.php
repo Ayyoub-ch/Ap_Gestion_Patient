@@ -27,13 +27,20 @@ class Service
     /**
      * @var Collection<int, Chambre>
      */
-    #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'chambre')]
+    #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'service')]
     private Collection $chambres;
+
+    /**
+     * @var Collection<int, Sejour>
+     */
+    #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'id_service')]
+    private Collection $sejours;
 
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->chambres = new ArrayCollection();
+        $this->sejours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -95,7 +102,7 @@ class Service
     {
         if (!$this->chambres->contains($chambre)) {
             $this->chambres->add($chambre);
-            $chambre->setChambre($this);
+            $chambre->setService($this);
         }
 
         return $this;
@@ -105,8 +112,38 @@ class Service
     {
         if ($this->chambres->removeElement($chambre)) {
             // set the owning side to null (unless already changed)
-            if ($chambre->getChambre() === $this) {
-                $chambre->setChambre(null);
+            if ($chambre->getService() === $this) {
+                $chambre->setService(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sejour>
+     */
+    public function getSejours(): Collection
+    {
+        return $this->sejours;
+    }
+
+    public function addSejour(Sejour $sejour): static
+    {
+        if (!$this->sejours->contains($sejour)) {
+            $this->sejours->add($sejour);
+            $sejour->setIdService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSejour(Sejour $sejour): static
+    {
+        if ($this->sejours->removeElement($sejour)) {
+            // set the owning side to null (unless already changed)
+            if ($sejour->getIdService() === $this) {
+                $sejour->setIdService(null);
             }
         }
 

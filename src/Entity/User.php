@@ -131,7 +131,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->service;
     }
 
-    public function setService(?Service $service): static
+    public function setService(?Service $service): self
     {
         $this->service = $service;
 

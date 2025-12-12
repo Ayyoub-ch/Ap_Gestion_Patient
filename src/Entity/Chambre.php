@@ -24,9 +24,6 @@ class Chambre
     #[ORM\Column]
     private ?int $nombre_lit = null;
 
-    #[ORM\ManyToOne(inversedBy: 'chambres')]
-    private ?Service $chambre = null;
-
     /**
      * @var Collection<int, Lit>
      */
@@ -38,6 +35,9 @@ class Chambre
      */
     #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'chambre')]
     private Collection $sejours;
+
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'chambres')]
+    private ?Service $service = null;
 
     public function __construct()
     {
@@ -85,19 +85,6 @@ class Chambre
 
         return $this;
     }
-
-    public function getChambre(): ?Service
-    {
-        return $this->chambre;
-    }
-
-    public function setChambre(?Service $chambre): static
-    {
-        $this->chambre = $chambre;
-
-        return $this;
-    }
-
     /**
      * @return Collection<int, Lit>
      */
@@ -154,6 +141,18 @@ class Chambre
                 $sejour->setChambre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }

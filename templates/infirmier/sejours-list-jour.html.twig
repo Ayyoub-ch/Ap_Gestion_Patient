@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% block title %}Séjours débutant aujourd'hui{% endblock %}
+
+{% block body %}
+    <h1>Séjours débutant le {{ "now"|date("d/m/Y") }} </h1>
+
+    {% if sejours is empty %}
+        <div class="alert alert-info">
+            Aucun séjour ne débute aujourd'hui pour votre service.
+        </div>
+    {% else %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Patient</th>
+                    <th>Date début prévue</th>
+                    <th>Chambre</th>
+                    <th>Étage</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for sejour in sejours %}
+                <tr>
+                    <td>
+                        {{ sejour.patient.nomPatient }} {{ sejour.patient.prenomPatient }}
+                    </td>
+                    <td>{{ sejour.date_entree|date('d/m/Y') }}</td>
+                    <td>{{ sejour.chambre.id }}</td>
+                    <td>{{ sejour.chambre.etage }}</td>
+                    <td>
+                        <a href="{{ path('infirmier_sejour_today', {id: sejour.id}) }}"
+                           class="btn btn-sm btn-primary">
+                            Détails / Arrivée
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+{% endblock %}    
