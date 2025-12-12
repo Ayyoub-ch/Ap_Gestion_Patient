@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails des patients{% endblock %}
+
+{% block body %}
+ <p class="h1">Patiens</p>
+<div class="d-flex justify-content-between">
+    <table class="table table-striped-columns">
+            <thead>
+                <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Date d'entrée</th>
+                    <th scope="col">Date de sortie prévue</th>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Prenom</th>
+                    <th scope="col">Téléphone</th>
+                    <th scope="col">Sexe</th>
+                    <th scope="col">Commentaires éventuels(Notes)</th>
+                    <th scope="col">Localité</th>
+
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for user in users %}
+                    <tr class="cursor-pointer">
+                            <th scope="row">{{patient.id}}</th>
+                            <th>{{patient.date_entree}}</th>
+                            <td>{{patient.date_sortie}}</td>
+                            <td>{{patient.nom}}</td>
+                            <td>{{patient.prenom}}</td>
+                            <td>{{patient.telephone}}</td>
+                            <td>{{patient.sexe}}</td>
+                            <td>{{patient.note}}</td>
+                            <td>{{patient.localite}}</td>
+
+                    </tr>
+				{% endfor %}
+            </tbody>
+</table>
+</div>
+{% endblock %}

@@ -31,6 +31,9 @@ class Sejour
     #[ORM\ManyToOne(inversedBy: 'sejours')]
     private ?Chambre $chambre = null;
 
+    #[ORM\ManyToOne(inversedBy: 'sejours')]
+    private ?Service $id_service = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -104,6 +107,18 @@ class Sejour
     public function setChambre(?Chambre $chambre): static
     {
         $this->chambre = $chambre;
+
+        return $this;
+    }
+
+    public function getIdService(): ?Service
+    {
+        return $this->id_service;
+    }
+
+    public function setIdService(?Service $id_service): static
+    {
+        $this->id_service = $id_service;
 
         return $this;
     }
