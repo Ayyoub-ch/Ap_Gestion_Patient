@@ -13,14 +13,14 @@ use Symfony\Component\HttpFoundation\Request;
 
 final class AdministratifController extends AbstractController
 {
-    #[Route('/administratif/dashboard', name: 'app_administratif')]
+    #[Route('/', name: 'app_administratif')]
     public function index(): Response
     {
         return $this->render('administratif/index.html.twig');
     }
     
     //Partie Patient
-    #[Route('/administratif/patient', name: 'app_patient')]
+    #[Route('/patient', name: 'app_patient')]
     public function patients(ManagerRegistry $doctrine): Response
     {
         $repository = $doctrine->getRepository(Patient::class);
@@ -31,7 +31,7 @@ final class AdministratifController extends AbstractController
     }
 
     /*Supprimer un patient*/
-    #[Route('/administratif/retirerPatient/{id}', name: 'app_retirer_patient', methods: ['POST'])]
+    #[Route('/retirerPatient/{id}', name: 'app_retirer_patient', methods: ['POST'])]
     public function retirerPatient(ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Patient::class);
@@ -62,7 +62,7 @@ final class AdministratifController extends AbstractController
 
 
     /* Ajouter un patient */
-    #[Route('/administratif/ajouterPatient', name: 'app_ajouter_patient', methods: ['POST'])]
+    #[Route('/ajouterPatient', name: 'app_ajouter_patient', methods: ['POST'])]
     public function ajouterPatient(Request $request, ManagerRegistry $doctrine): Response
     {
         $em = $doctrine->getManager();
@@ -95,7 +95,7 @@ final class AdministratifController extends AbstractController
 
 
     /* Modifier un patient */
-    #[Route('/administratif/modifierPatient/{id}', name: 'app_modifier_patient', methods: ['GET', 'POST'])]
+    #[Route('/modifierPatient/{id}', name: 'app_modifier_patient', methods: ['GET', 'POST'])]
     public function modifierPatient(Request $request, ManagerRegistry $doctrine, $id): Response
     {
         $repository = $doctrine->getRepository(Patient::class);
@@ -130,8 +130,8 @@ final class AdministratifController extends AbstractController
 
 
     //Partie Séjour
-    #[Route('/administratif/sejour', name: 'app_sejour')]
-    public function sejours(ManagerRegistry $doctrine): Response
+    #[Route('/sejour', name: 'app_sejour')]
+    public function sejours(): Response
     {
         $repository = $doctrine->getRepository(Sejour::class);
         $sejours = $repository->findAll(); // Récupère tous les séjours
