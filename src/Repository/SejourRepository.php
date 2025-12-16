@@ -39,7 +39,32 @@ class SejourRepository extends ServiceEntityRepository
               ->getQuery()
               ->getResult();
     }
+    public function findByDateEntree($id): array 
+    {
+       $today = new \DateTime('today');
+
+       return $this->createQueryBuilder('s')
+            ->join('s.patient', 'p')
+              ->andWhere('s.patient = :id')
+              ->andWhere('s.date_entree = :today')
+              ->setParameter('id', $id)
+              ->setParameter('today', $today)
+              ->getQuery()
+              ->getResult();
+    }
     
+    public function findByDateSortie($id){
+        $em = $this->getEntityManager();
+
+        $query = $em->createQueryBuilder()
+            ->select('s')
+            ->from('App\Entity\Sejour', 's')
+            ->where('s.date_sortie IS NOT NULL')
+            ->andWhere('s.date_sortie = CURRENT_DATE()')
+            ->orderBy('s.date_sortie', 'DESC');
+
+        return $query->getQuery()->getResult();
+    }
     //    /**
     //     * @return Sejour[] Returns an array of Sejour objects
     //     */
