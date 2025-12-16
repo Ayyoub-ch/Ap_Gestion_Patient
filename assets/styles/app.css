@@ -3,6 +3,7 @@
 @import './mobile/footer-mobile.css';
 @import './index.css';
 @import './patient.css';
+@import './auth.css';
 
 html, body {
     height: 100%;
@@ -19,6 +20,8 @@ body {
 
 main {
     flex: 1 0 auto;
+    padding-top: 20px;
+    padding-bottom: 40px;
 }
 
 .footer {

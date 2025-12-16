@@ -35,8 +35,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         
-        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_INFIRMIER] }
-        - { path: ^/administratif, roles: [ROLE_ADMIN, ROLE_ADMNINISTRATIF] }       
+        - { path: ^/administratif, roles: [ROLE_ADMIN, ROLE_ADMINISTRATIF] }
+        - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_INFIRMIER] }       
         - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
