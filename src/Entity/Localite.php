@@ -7,6 +7,7 @@ use App\Repository\LocaliteRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: LocaliteRepository::class)]
 class Localite
@@ -26,12 +27,14 @@ class Localite
      * @var Collection<int, Patient>
      */
     #[ORM\OneToMany(targetEntity: Patient::class, mappedBy: 'localite')]
+    #[Ignore]
     private Collection $patients;
 
     /**
      * @var Collection<int, User>
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'localite')]
+    #[Ignore]
     private Collection $utilisateurs;
 
     public function __construct()

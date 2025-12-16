@@ -6,6 +6,7 @@ use App\Repository\PatientRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: PatientRepository::class)]
 class Patient
@@ -37,6 +38,7 @@ class Patient
      * @var Collection<int, Sejour>
      */
     #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'patient')]
+    #[Ignore]
     private Collection $sejours;
 
     public function __construct()

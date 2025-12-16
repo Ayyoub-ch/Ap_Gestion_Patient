@@ -6,6 +6,7 @@ use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ServiceRepository::class)]
 class Service
@@ -22,18 +23,21 @@ class Service
      * @var Collection<int, User>
      */
     #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'service')]
+    #[Ignore]
     private Collection $utilisateurs;
 
     /**
      * @var Collection<int, Chambre>
      */
     #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'service')]
+    #[Ignore]
     private Collection $chambres;
 
     /**
      * @var Collection<int, Sejour>
      */
-    #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'id_service')]
+    #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'service')]
+    #[Ignore]
     private Collection $sejours;
 
     public function __construct()
@@ -132,21 +136,9 @@ class Service
     {
         if (!$this->sejours->contains($sejour)) {
             $this->sejours->add($sejour);
-            $sejour->setIdService($this);
         }
 
         return $this;
     }
 
-    public function removeSejour(Sejour $sejour): static
-    {
-        if ($this->sejours->removeElement($sejour)) {
-            // set the owning side to null (unless already changed)
-            if ($sejour->getIdService() === $this) {
-                $sejour->setIdService(null);
-            }
-        }
-
-        return $this;
-    }
 }

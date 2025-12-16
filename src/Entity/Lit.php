@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\LitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: LitRepository::class)]
 class Lit
@@ -18,6 +19,7 @@ class Lit
     private ?bool $disponibilite = null;
 
     #[ORM\ManyToOne(inversedBy: 'lits')]
+    #[Ignore]
     private ?Chambre $chambre = null;
 
     public function getId(): ?int

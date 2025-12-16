@@ -6,6 +6,7 @@ use App\Repository\ChambreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: ChambreRepository::class)]
 class Chambre
@@ -29,12 +30,14 @@ class Chambre
      * @var Collection<int, Lit>
      */
     #[ORM\OneToMany(targetEntity: Lit::class, mappedBy: 'chambre')]
+    #[Ignore]
     private Collection $lits;
 
     /**
      * @var Collection<int, Sejour>
      */
     #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'chambre')]
+    #[Ignore]
     private Collection $sejours;
 
 
