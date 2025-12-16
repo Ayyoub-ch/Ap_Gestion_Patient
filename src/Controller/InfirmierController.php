@@ -19,7 +19,7 @@ final class InfirmierController extends AbstractController
 
     // Gestion des patients (arrivées et sorties)
     #[Route('/infirmier/gestion', name: 'app_gestion')]
-    public function sejour(): Response {
+    public function gestion(): Response {
         return $this->render('infirmier/index_gestion.html.twig');
     }
 
