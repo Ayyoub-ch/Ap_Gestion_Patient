@@ -24,6 +24,30 @@ class UserFormType extends AbstractType
         $isEdit = $options['is_edit'];
 
         $builder
+            ->add('prenom', null, [
+                'label' => 'Prénom',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un prénom',
+                    ]),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Prénom',
+                ],
+            ])
+            ->add('nom', null, [
+                'label' => 'Nom',
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer un nom',
+                    ]),
+                ],
+                'attr' => [
+                    'class' => 'form-control',
+                    'placeholder' => 'Nom',
+                ],
+            ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'constraints' => [

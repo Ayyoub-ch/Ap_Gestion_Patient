@@ -37,7 +37,7 @@ security:
         
         - { path: ^/admin, roles: [ROLE_ADMIN, ROLE_INFIRMIER] }
         - { path: ^/administratif, roles: [ROLE_ADMIN, ROLE_ADMNINISTRATIF] }       
-        # - { path: ^/, roles: ROLE_USER }
+        - { path: ^/profile, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
     security:

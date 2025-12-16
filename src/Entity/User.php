@@ -21,6 +21,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 100)]
+    private ?string $nom = null;
+
+    #[ORM\Column(length: 100)]
+    private ?string $prenom = null;
+
     #[ORM\ManyToOne(inversedBy: 'utilisateurs')]
     private ?Service $service = null;
 
@@ -140,6 +146,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLocalite(?Localite $localite): static
     {
         $this->localite = $localite;
+
+        return $this;
+    }
+
+    public function getNom(): ?string
+    {
+        return $this->nom;
+    }
+
+    public function setNom(string $nom): static
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    public function getPrenom(): ?string
+    {
+        return $this->prenom;
+    }
+
+    public function setPrenom(string $prenom): static
+    {
+        $this->prenom = $prenom;
 
         return $this;
     }

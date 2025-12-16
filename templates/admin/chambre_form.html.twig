@@ -1,0 +1,221 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ is_edit ? 'Modifier' : 'Créer' }} une chambre{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        {% if is_edit %}
+                            <i class="fas fa-edit"></i> Modifier la chambre #{{ chambre.id }}
+                        {% else %}
+                            <i class="fas fa-plus"></i> Créer une nouvelle chambre
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        <div class="mb-3">
+                            <label for="numero" class="form-label">
+                                <i class="fas fa-hashtag"></i> Numéro de chambre
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="numero" 
+                                   name="numero" 
+                                   value="{% if is_edit %}{{ chambre.numero }}{% endif %}"
+                                   placeholder="Ex: 101, A12, Ch-201">
+                            <div class="form-text">Identifiant unique pour faciliter la recherche de la chambre</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="service_id" class="form-label">Service *</label>
+                            <select class="form-select" id="service_id" name="service_id" required>
+                                <option value="">Sélectionner un service</option>
+                                {% for service in services %}
+                                    <option value="{{ service.id }}" 
+                                            {% if is_edit and chambre.chambre and chambre.chambre.id == service.id %}selected{% endif %}>
+                                        {{ service.libelle }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-text">Le service auquel appartient cette chambre</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="etage" class="form-label">Étage *</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="etage" 
+                                   name="etage" 
+                                   value="{% if is_edit %}{{ chambre.etage }}{% endif %}"
+                                   min="0" 
+                                   max="20"
+                                   required>
+                            <div class="form-text">Le numéro d'étage (0 pour rez-de-chaussée)</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="nombre_lit" class="form-label">Nombre de lits *</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="nombre_lit" 
+                                   name="nombre_lit" 
+                                   value="{% if is_edit %}{{ chambre.nombreLit }}{% endif %}"
+                                   min="1" 
+                                   max="10"
+                                   required>
+                            <div class="form-text">La capacité maximale de lits pour cette chambre</div>
+                            {% if is_edit and chambre.lits|length > 0 %}
+                                <div class="alert alert-warning mt-2 mb-0">
+                                    <i class="fas fa-exclamation-triangle"></i> 
+                                    <strong>Attention :</strong> {{ chambre.lits|length }} lit(s) déjà installé(s). 
+                                    La capacité ne peut pas être inférieure à ce nombre.
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {% if is_edit and chambre.lits|length > 0 %}
+                            <div class="mb-3">
+                                <label class="form-label">État d'occupation actuel</label>
+                                <div class="progress" style="height: 30px;">
+                                    {% set occupation_percent = (chambre.lits|length / chambre.nombreLit * 100)|round %}
+                                    <div class="progress-bar {% if occupation_percent >= 100 %}bg-danger{% elseif occupation_percent >= 80 %}bg-warning{% elseif occupation_percent >= 50 %}bg-info{% else %}bg-success{% endif %}" 
+                                         role="progressbar" 
+                                         style="width: {{ occupation_percent }}%;">
+                                        {{ chambre.lits|length }}/{{ chambre.nombreLit }} lits ({{ occupation_percent }}%)
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_admin_chambres_lits') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ is_edit ? 'Modifier' : 'Créer' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            {% if is_edit and chambre.lits|length > 0 %}
+                <div class="card mt-3">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-bed"></i> Lits de cette chambre 
+                            <span class="badge bg-primary">{{ chambre.lits|length }}</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Numéro</th>
+                                        <th>Disponibilité</th>
+                                        <th>Notes</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for lit in chambre.lits %}
+                                        <tr>
+                                            <td><strong>#{{ lit.id }}</strong></td>
+                                            <td>
+                                                {% if lit.numero %}
+                                                    <span class="badge bg-dark">{{ lit.numero }}</span>
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if lit.disponibilite %}
+                                                    <span class="badge bg-success">
+                                                        <i class="fas fa-check"></i> Disponible
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">
+                                                        <i class="fas fa-times"></i> Occupé
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if lit.notes %}
+                                                    <small class="text-muted">{{ lit.notes|slice(0, 50) }}{% if lit.notes|length > 50 %}...{% endif %}</small>
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{{ path('app_admin_lits_edit', {'id': lit.id}) }}" 
+                                                   class="btn btn-sm btn-primary"
+                                                   title="Modifier">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {% if chambre.lits|length < chambre.nombreLit %}
+                            <div class="alert alert-success mb-0 mt-2">
+                                <i class="fas fa-info-circle"></i> 
+                                Il reste <strong>{{ chambre.nombreLit - chambre.lits|length }}</strong> emplacement(s) disponible(s) dans cette chambre.
+                                <a href="{{ path('app_admin_lits_new') }}" class="alert-link">Ajouter un lit</a>
+                            </div>
+                        {% else %}
+                            <div class="alert alert-warning mb-0 mt-2">
+                                <i class="fas fa-exclamation-triangle"></i> 
+                                La chambre a atteint sa capacité maximale. Pour ajouter un lit, augmentez d'abord la capacité.
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if is_edit %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const nombreLitInput = document.getElementById('nombre_lit');
+    const litsActuels = {{ chambre.lits|length }};
+    
+    if (nombreLitInput) {
+        nombreLitInput.addEventListener('change', function() {
+            const newCapacite = parseInt(this.value);
+            
+            if (newCapacite < litsActuels) {
+                alert('Attention : La capacité ne peut pas être inférieure au nombre de lits actuellement installés (' + litsActuels + ').');
+                this.value = litsActuels;
+            }
+        });
+        
+        // Définir le minimum au nombre de lits actuels
+        nombreLitInput.min = litsActuels;
+    }
+});
+</script>
+{% endif %}
+
+<style>
+.form-text {
+    font-size: 0.875rem;
+    color: #6c757d;
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f8f9fa;
+}
+</style>
+{% endblock %}

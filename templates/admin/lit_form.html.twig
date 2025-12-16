@@ -1,0 +1,460 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ is_edit ? 'Modifier' : 'Créer' }} un lit{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">
+                        {% if is_edit %}
+                            <i class="fas fa-edit"></i> Modifier le lit #{{ lit.id }}
+                        {% else %}
+                            <i class="fas fa-plus"></i> Créer un nouveau lit
+                        {% endif %}
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="litForm">
+                        {# Numéro du lit #}
+                        <div class="mb-3">
+                            <label for="numero" class="form-label">
+                                <i class="fas fa-hashtag"></i> Numéro/Référence du lit
+                            </label>
+                            <input type="text" 
+                                   class="form-control" 
+                                   id="numero" 
+                                   name="numero" 
+                                   value="{% if is_edit %}{{ lit.numero }}{% endif %}"
+                                   placeholder="Ex: L-001, Lit A, Chambre 12-Lit 1">
+                            <div class="form-text">Identifiant unique pour faciliter la recherche du lit</div>
+                        </div>
+
+                        {# Type d'emplacement #}
+                        <div class="mb-4">
+                            <label for="type_emplacement" class="form-label">
+                                <i class="fas fa-map-marker-alt"></i> Type d'emplacement *
+                            </label>
+                            <select class="form-select" id="type_emplacement" name="type_emplacement" required>
+                                <option value="">-- Sélectionner un type d'emplacement --</option>
+                                <option value="chambre" {% if is_edit and lit.typeEmplacement == 'chambre' %}selected{% endif %}>
+                                    Chambre
+                                </option>
+                                <option value="couloir" {% if is_edit and lit.typeEmplacement == 'couloir' %}selected{% endif %}>
+                                    Couloir
+                                </option>
+                                <option value="salle_reveil" {% if is_edit and lit.typeEmplacement == 'salle_reveil' %}selected{% endif %}>
+                                    Salle de réveil
+                                </option>
+                                <option value="urgences" {% if is_edit and lit.typeEmplacement == 'urgences' %}selected{% endif %}>
+                                    Urgences
+                                </option>
+                                <option value="soins_intensifs" {% if is_edit and lit.typeEmplacement == 'soins_intensifs' %}selected{% endif %}>
+                                    Soins intensifs / Réanimation
+                                </option>
+                                <option value="bloc_operatoire" {% if is_edit and lit.typeEmplacement == 'bloc_operatoire' %}selected{% endif %}>
+                                    Bloc opératoire
+                                </option>
+                                <option value="autre" {% if is_edit and lit.typeEmplacement == 'autre' %}selected{% endif %}>
+                                    Autre
+                                </option>
+                            </select>
+                            <div class="form-text">Le type d'emplacement détermine les champs à remplir</div>
+                        </div>
+
+                        {# Section Chambre #}
+                        <div id="section_chambre" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-door-open"></i> Détails - Chambre</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="chambre_id" class="form-label">Sélectionner une chambre *</label>
+                                        <select class="form-select" id="chambre_id" name="chambre_id">
+                                            <option value="">-- Choisir une chambre --</option>
+                                            {% for chambre in chambres %}
+                                                {% set lits_count = chambre.lits|length %}
+                                                {% set capacite = chambre.nombreLit %}
+                                                {% set lits_disponibles = capacite - lits_count %}
+                                                {% set is_full = lits_count >= capacite %}
+                                                
+                                                <option value="{{ chambre.id }}" 
+                                                        {% if is_edit and lit.chambre and lit.chambre.id == chambre.id %}selected{% endif %}
+                                                        {% if not is_edit and is_full %}disabled{% endif %}
+                                                        data-capacite="{{ capacite }}"
+                                                        data-occupation="{{ lits_count }}"
+                                                        data-service="{{ chambre.chambre ? chambre.chambre.libelle : 'Non assigné' }}"
+                                                        data-etage="{{ chambre.etage }}">
+                                                    {% if chambre.numero %}Chambre {{ chambre.numero }}{% else %}Chambre #{{ chambre.id }}{% endif %} - {{ chambre.chambre ? chambre.chambre.libelle : 'Sans service' }} - Étage {{ chambre.etage }} 
+                                                    ({{ lits_count }}/{{ capacite }} lits)
+                                                    {% if is_full and not (is_edit and lit.chambre and lit.chambre.id == chambre.id) %} - PLEINE{% endif %}
+                                                </option>
+                                            {% endfor %}
+                                        </select>
+                                        <div class="form-text">Sélectionnez la chambre où placer ce lit</div>
+                                    </div>
+
+                                    {# Informations sur la chambre sélectionnée #}
+                                    <div id="chambre_info" style="display: none;" class="alert alert-info">
+                                        <h6 class="alert-heading"><i class="fas fa-info-circle"></i> Informations sur la chambre</h6>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-1"><strong>Service :</strong> <span id="info_service">-</span></p>
+                                                <p class="mb-1"><strong>Étage :</strong> <span id="info_etage">-</span></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-1"><strong>Capacité :</strong> <span id="info_capacite">-</span> lits</p>
+                                                <p class="mb-1"><strong>Occupation :</strong> <span id="info_occupation">-</span></p>
+                                                <div class="progress mt-2" style="height: 20px;">
+                                                    <div id="occupation_bar" class="progress-bar" role="progressbar" style="width: 0%;">0%</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="warning_pleine" class="alert alert-warning mt-2 mb-0" style="display: none;">
+                                            <i class="fas fa-exclamation-triangle"></i> <strong>Attention :</strong> Cette chambre a atteint sa capacité maximale.
+                                            {% if is_edit %}Vous pouvez modifier ce lit car il est déjà dans cette chambre.{% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Couloir #}
+                        <div id="section_couloir" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-info">
+                                <div class="card-header bg-info text-white">
+                                    <h6 class="mb-0"><i class="fas fa-walking"></i> Détails - Couloir</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="couloir_etage" class="form-label">Étage *</label>
+                                            <select class="form-select" id="couloir_etage" name="description_emplacement">
+                                                <option value="">Sélectionner un étage</option>
+                                                {% for i in 0..10 %}
+                                                    <option value="Étage {{ i }}" {% if is_edit and lit.descriptionEmplacement == 'Étage ' ~ i %}selected{% endif %}>
+                                                        {% if i == 0 %}Rez-de-chaussée{% else %}Étage {{ i }}{% endif %}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="couloir_zone" class="form-label">Zone / Aile</label>
+                                            <input type="text" class="form-control" id="couloir_zone" placeholder="Ex: Aile Nord, Zone C">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Salle de réveil #}
+                        <div id="section_salle_reveil" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-warning">
+                                <div class="card-header bg-warning">
+                                    <h6 class="mb-0"><i class="fas fa-procedures"></i> Détails - Salle de réveil</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="salle_reveil_numero" class="form-label">Numéro de salle *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="salle_reveil_numero" 
+                                               name="description_emplacement"
+                                               value="{% if is_edit and lit.typeEmplacement == 'salle_reveil' %}{{ lit.descriptionEmplacement }}{% endif %}"
+                                               placeholder="Ex: Salle de réveil 1, SSPI">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Urgences #}
+                        <div id="section_urgences" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0"><i class="fas fa-ambulance"></i> Détails - Urgences</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="urgences_zone" class="form-label">Zone / Box *</label>
+                                        <select class="form-select" id="urgences_zone" name="description_emplacement">
+                                            <option value="">Sélectionner une zone</option>
+                                            <option value="Box 1" {% if is_edit and lit.descriptionEmplacement == 'Box 1' %}selected{% endif %}>Box 1</option>
+                                            <option value="Box 2" {% if is_edit and lit.descriptionEmplacement == 'Box 2' %}selected{% endif %}>Box 2</option>
+                                            <option value="Box 3" {% if is_edit and lit.descriptionEmplacement == 'Box 3' %}selected{% endif %}>Box 3</option>
+                                            <option value="Box 4" {% if is_edit and lit.descriptionEmplacement == 'Box 4' %}selected{% endif %}>Box 4</option>
+                                            <option value="Box 5" {% if is_edit and lit.descriptionEmplacement == 'Box 5' %}selected{% endif %}>Box 5</option>
+                                            <option value="Zone d'attente" {% if is_edit and lit.descriptionEmplacement == "Zone d'attente" %}selected{% endif %}>Zone d'attente</option>
+                                            <option value="Salle de déchocage" {% if is_edit and lit.descriptionEmplacement == 'Salle de déchocage' %}selected{% endif %}>Salle de déchocage</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Soins intensifs #}
+                        <div id="section_soins_intensifs" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-danger">
+                                <div class="card-header bg-danger text-white">
+                                    <h6 class="mb-0"><i class="fas fa-heartbeat"></i> Détails - Soins intensifs / Réanimation</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="si_box" class="form-label">Box / Chambre *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="si_box" 
+                                               name="description_emplacement"
+                                               value="{% if is_edit and lit.typeEmplacement == 'soins_intensifs' %}{{ lit.descriptionEmplacement }}{% endif %}"
+                                               placeholder="Ex: Box SI-1, Réa 3">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Bloc opératoire #}
+                        <div id="section_bloc_operatoire" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-success">
+                                <div class="card-header bg-success text-white">
+                                    <h6 class="mb-0"><i class="fas fa-user-md"></i> Détails - Bloc opératoire</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="bloc_salle" class="form-label">Salle d'opération *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="bloc_salle" 
+                                               name="description_emplacement"
+                                               value="{% if is_edit and lit.typeEmplacement == 'bloc_operatoire' %}{{ lit.descriptionEmplacement }}{% endif %}"
+                                               placeholder="Ex: Salle 1, Bloc A">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Section Autre #}
+                        <div id="section_autre" class="emplacement-section" style="display: none;">
+                            <div class="card mb-3 border-secondary">
+                                <div class="card-header bg-secondary text-white">
+                                    <h6 class="mb-0"><i class="fas fa-question"></i> Détails - Autre emplacement</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label for="autre_description" class="form-label">Description de l'emplacement *</label>
+                                        <input type="text" 
+                                               class="form-control" 
+                                               id="autre_description" 
+                                               name="description_emplacement"
+                                               value="{% if is_edit and lit.typeEmplacement == 'autre' %}{{ lit.descriptionEmplacement }}{% endif %}"
+                                               placeholder="Décrivez précisément l'emplacement du lit">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# Disponibilité #}
+                        <div class="mb-3">
+                            <label for="disponibilite" class="form-label">
+                                <i class="fas fa-check-circle"></i> Disponibilité *
+                            </label>
+                            <select class="form-select" id="disponibilite" name="disponibilite" required>
+                                <option value="1" {% if is_edit and lit.disponibilite %}selected{% endif %}>
+                                    Disponible
+                                </option>
+                                <option value="0" {% if is_edit and not lit.disponibilite %}selected{% endif %}>
+                                    Occupé
+                                </option>
+                            </select>
+                        </div>
+
+                        {# Notes #}
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">
+                                <i class="fas fa-sticky-note"></i> Notes / Observations
+                            </label>
+                            <textarea class="form-control" 
+                                      id="notes" 
+                                      name="notes" 
+                                      rows="3" 
+                                      placeholder="Informations complémentaires sur ce lit (équipement spécial, restrictions, etc.)">{% if is_edit %}{{ lit.notes }}{% endif %}</textarea>
+                            <div class="form-text">Informations complémentaires (optionnel)</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a href="{{ path('app_admin_chambres_lits') }}" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> {{ is_edit ? 'Modifier' : 'Créer' }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const typeEmplacement = document.getElementById('type_emplacement');
+    const sections = document.querySelectorAll('.emplacement-section');
+    const chambreSelect = document.getElementById('chambre_id');
+    const chambreInfo = document.getElementById('chambre_info');
+    
+    function updateSections() {
+        const selectedType = typeEmplacement.value;
+        
+        // Cacher toutes les sections
+        sections.forEach(section => {
+            section.style.display = 'none';
+            // Désactiver les champs required
+            section.querySelectorAll('input, select').forEach(input => {
+                input.removeAttribute('required');
+            });
+        });
+        
+        // Afficher la section correspondante
+        if (selectedType) {
+            const targetSection = document.getElementById('section_' + selectedType);
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                // Activer les champs required selon le type
+                if (selectedType === 'chambre') {
+                    // Pour la section chambre, seul le select de chambre est obligatoire
+                    const chambreSelect = targetSection.querySelector('#chambre_id');
+                    if (chambreSelect) {
+                        chambreSelect.setAttribute('required', 'required');
+                    }
+                } else {
+                    // Pour les autres sections, rendre les inputs text et selects obligatoires
+                    targetSection.querySelectorAll('input[type="text"], select').forEach(input => {
+                        if (!input.id.includes('zone')) { // Ne pas rendre 'zone' obligatoire
+                            input.setAttribute('required', 'required');
+                        }
+                    });
+                }
+            }
+        }
+    }
+    
+    // Gestion des informations de la chambre
+    if (chambreSelect && chambreInfo) {
+        chambreSelect.addEventListener('change', function() {
+            const selectedOption = this.options[this.selectedIndex];
+            
+            if (selectedOption.value) {
+                const capacite = parseInt(selectedOption.dataset.capacite);
+                const occupation = parseInt(selectedOption.dataset.occupation);
+                const service = selectedOption.dataset.service;
+                const etage = selectedOption.dataset.etage;
+                const pourcentage = Math.round((occupation / capacite) * 100);
+                
+                // Afficher les informations
+                document.getElementById('info_service').textContent = service;
+                document.getElementById('info_etage').textContent = etage;
+                document.getElementById('info_capacite').textContent = capacite;
+                document.getElementById('info_occupation').textContent = occupation + '/' + capacite;
+                
+                // Mettre à jour la barre de progression
+                const occupationBar = document.getElementById('occupation_bar');
+                occupationBar.style.width = pourcentage + '%';
+                occupationBar.textContent = pourcentage + '%';
+                
+                // Changer la couleur selon l'occupation
+                occupationBar.className = 'progress-bar';
+                if (pourcentage >= 100) {
+                    occupationBar.classList.add('bg-danger');
+                    document.getElementById('warning_pleine').style.display = 'block';
+                } else if (pourcentage >= 80) {
+                    occupationBar.classList.add('bg-warning');
+                    document.getElementById('warning_pleine').style.display = 'none';
+                } else if (pourcentage >= 50) {
+                    occupationBar.classList.add('bg-info');
+                    document.getElementById('warning_pleine').style.display = 'none';
+                } else {
+                    occupationBar.classList.add('bg-success');
+                    document.getElementById('warning_pleine').style.display = 'none';
+                }
+                
+                chambreInfo.style.display = 'block';
+            } else {
+                chambreInfo.style.display = 'none';
+            }
+        });
+        
+        // Déclencher l'événement au chargement si une chambre est déjà sélectionnée
+        if (chambreSelect.value) {
+            chambreSelect.dispatchEvent(new Event('change'));
+        }
+    }
+    
+    // Gérer la fusion de l'étage et de la zone pour le couloir
+    const couloirEtage = document.getElementById('couloir_etage');
+    const couloirZone = document.getElementById('couloir_zone');
+    
+    if (couloirEtage && couloirZone) {
+        const updateCouloirDescription = function() {
+            const etage = couloirEtage.value;
+            const zone = couloirZone.value;
+            if (etage && zone) {
+                couloirEtage.value = etage + ' - ' + zone;
+            }
+        };
+        
+        couloirZone.addEventListener('change', updateCouloirDescription);
+        couloirZone.addEventListener('blur', updateCouloirDescription);
+    }
+    
+    typeEmplacement.addEventListener('change', updateSections);
+    
+    // Validation du formulaire avant soumission
+    const litForm = document.getElementById('litForm');
+    if (litForm) {
+        litForm.addEventListener('submit', function(e) {
+            const typeEmplacementValue = typeEmplacement.value;
+            
+            // Si type chambre, vérifier qu'une chambre est sélectionnée
+            if (typeEmplacementValue === 'chambre') {
+                const chambreId = document.getElementById('chambre_id');
+                if (!chambreId || !chambreId.value) {
+                    e.preventDefault();
+                    alert('Veuillez sélectionner une chambre pour ce lit.');
+                    return false;
+                }
+            }
+            
+            // Vérifier qu'un type d'emplacement est sélectionné
+            if (!typeEmplacementValue) {
+                e.preventDefault();
+                alert('Veuillez sélectionner un type d\'emplacement.');
+                return false;
+            }
+        });
+    }
+    
+    // Initialiser au chargement
+    updateSections();
+});
+</script>
+
+<style>
+.emplacement-section {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-label {
+    font-weight: 600;
+}
+
+.card-header h6 {
+    font-weight: 600;
+}
+</style>{% endblock %}

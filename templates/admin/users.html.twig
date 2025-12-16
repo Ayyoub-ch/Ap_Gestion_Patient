@@ -36,6 +36,8 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>Prénom</th>
+                            <th>Nom</th>
                             <th>Email</th>
                             <th>Rôles</th>
                             <th>Service</th>
@@ -47,6 +49,8 @@
                         {% for user in users %}
                             <tr>
                                 <td>{{ user.id }}</td>
+                                <td>{{ user.prenom }}</td>
+                                <td>{{ user.nom }}</td>
                                 <td>{{ user.email }}</td>
                                 <td>
                                     {% for role in user.roles %}

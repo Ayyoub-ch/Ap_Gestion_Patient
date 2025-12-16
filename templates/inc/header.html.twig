@@ -1,4 +1,4 @@
-<header class="header">
+<header class="header" data-turbo="false">
     <nav>
         <div class="logo">
             <a href="{{ path('app_main') }}">
@@ -13,13 +13,19 @@
             {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_INFIRMIER') %}
                 <!-- Menu déroulant pour l'admin -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Administrateur
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Tableau de bord</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_admin_users') }}">Utilisateurs</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_admin_services') }}">Services</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_dashboard') }}"><i class="fas fa-tachometer-alt"></i> Tableau de bord</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_users') }}"><i class="fas fa-users"></i> Utilisateurs</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_services') }}"><i class="fas fa-hospital"></i> Services</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_chambres_lits') }}"><i class="fas fa-bed"></i> Chambres & Lits</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_patients') }}"><i class="fas fa-user-injured"></i> Patients</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_statistiques') }}"><i class="fas fa-chart-bar"></i> Statistiques</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_parametres') }}"><i class="fas fa-cog"></i> Paramètres</a></li>
                     </ul>
                 </li>
             {% endif %}
@@ -27,7 +33,7 @@
             {% if is_granted('ROLE_ADMINISTRATIF') %}
                 <!-- Menu déroulant pour l'administratif -->
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" id="administratifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                         Gestion
                     </a>
                     <ul class="dropdown-menu">
@@ -39,7 +45,20 @@
             {% endif %}
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}
-                <li><a href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                <!-- Menu déroulant utilisateur -->
+                <li class="dropdown user-dropdown">
+                    <a href="#" class="user-profile dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="user-circle">
+                            <span class="user-icon">👤</span>
+                        </span>
+                        <span class="user-name">{{ app.user.prenom }} {{ app.user.nom }}</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profil</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
+                    </ul>
+                </li>
             {% else %}
                 <li><a href="{{ path('app_login') }}">Se connecter</a></li>
             {% endif %}

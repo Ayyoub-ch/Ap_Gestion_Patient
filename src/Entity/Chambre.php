@@ -15,6 +15,9 @@ class Chambre
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 20, nullable: true)]
+    private ?string $numero = null;
+
     #[ORM\Column]
     private ?int $etage = null;
 
@@ -45,6 +48,18 @@ class Chambre
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getNumero(): ?string
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?string $numero): static
+    {
+        $this->numero = $numero;
+
+        return $this;
     }
 
     public function getEtage(): ?int

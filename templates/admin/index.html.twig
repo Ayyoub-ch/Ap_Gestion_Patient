@@ -26,7 +26,7 @@
                     <i class="fas fa-hospital-user fa-3x mb-3 text-success"></i>
                     <h5 class="card-title">Gestion des patients</h5>
                     <p class="card-text">Consulter et gérer les patients</p>
-                    <a href="#" class="btn btn-success">
+                    <a href="{{ path('app_admin_patients') }}" class="btn btn-success">
                         Accéder <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -39,7 +39,7 @@
                     <i class="fas fa-chart-line fa-3x mb-3 text-info"></i>
                     <h5 class="card-title">Statistiques</h5>
                     <p class="card-text">Visualiser les statistiques du système</p>
-                    <a href="#" class="btn btn-info text-white">
+                    <a href="{{ path('app_admin_statistiques') }}" class="btn btn-info text-white">
                         Accéder <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -52,9 +52,9 @@
             <div class="card">
                 <div class="card-body text-center">
                     <i class="fas fa-bed fa-3x mb-3 text-warning"></i>
-                    <h5 class="card-title">Gestion des lits</h5>
-                    <p class="card-text">Gérer les lits et les chambres</p>
-                    <a href="#" class="btn btn-warning">
+                    <h5 class="card-title">Gestion des chambres et lits</h5>
+                    <p class="card-text">Gérer les chambres, les lits et leur occupation</p>
+                    <a href="{{ path('app_admin_chambres_lits') }}" class="btn btn-warning">
                         Accéder <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>
@@ -80,7 +80,7 @@
                     <i class="fas fa-cog fa-3x mb-3 text-dark"></i>
                     <h5 class="card-title">Paramètres</h5>
                     <p class="card-text">Configurer l'application</p>
-                    <a href="#" class="btn btn-dark">
+                    <a href="{{ path('app_admin_parametres') }}" class="btn btn-dark">
                         Accéder <i class="fas fa-arrow-right"></i>
                     </a>
                 </div>

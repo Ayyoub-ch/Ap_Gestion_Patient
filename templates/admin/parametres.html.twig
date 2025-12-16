@@ -1,0 +1,185 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Paramètres{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-cog"></i> Paramètres de l'application</h1>
+        <a href="{{ path('app_admin_dashboard') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour au dashboard
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-info-circle"></i> Informations système</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Nom de l'application</strong></td>
+                                <td>Gestion Patient</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Version</strong></td>
+                                <td>1.0.0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Framework</strong></td>
+                                <td>Symfony 7.2</td>
+                            </tr>
+                            <tr>
+                                <td><strong>PHP Version</strong></td>
+                                <td>{{ constant('PHP_VERSION') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Environnement</strong></td>
+                                <td>
+                                    <span class="badge bg-{{ app.environment == 'prod' ? 'success' : 'warning' }}">
+                                        {{ app.environment|upper }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-user-shield"></i> Utilisateur connecté</h5>
+                </div>
+                <div class="card-body">
+                    <table class="table table-sm">
+                        <tbody>
+                            <tr>
+                                <td><strong>Email</strong></td>
+                                <td>{{ app.user.email }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Rôles</strong></td>
+                                <td>
+                                    {% for role in app.user.roles %}
+                                        <span class="badge bg-primary">{{ role }}</span>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-tools"></i> Outils d'administration</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-database fa-3x text-primary mb-3"></i>
+                                    <h5 class="card-title">Base de données</h5>
+                                    <p class="card-text">Gérer les migrations et la structure</p>
+                                    <button class="btn btn-primary btn-sm" disabled>
+                                        <i class="fas fa-sync"></i> Migrations
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-warning">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-broom fa-3x text-warning mb-3"></i>
+                                    <h5 class="card-title">Cache</h5>
+                                    <p class="card-text">Vider le cache de l'application</p>
+                                    <button class="btn btn-warning btn-sm" disabled>
+                                        <i class="fas fa-trash"></i> Vider le cache
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-danger">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-file-alt fa-3x text-danger mb-3"></i>
+                                    <h5 class="card-title">Logs</h5>
+                                    <p class="card-text">Consulter les journaux d'erreurs</p>
+                                    <button class="btn btn-danger btn-sm" disabled>
+                                        <i class="fas fa-eye"></i> Voir les logs
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-link"></i> Liens rapides</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        <a href="{{ path('app_admin_users') }}" class="list-group-item list-group-item-action" data-turbo="false">
+                            <i class="fas fa-users"></i> Gestion des utilisateurs
+                        </a>
+                        <a href="{{ path('app_admin_patients') }}" class="list-group-item list-group-item-action" data-turbo="false">
+                            <i class="fas fa-user-injured"></i> Gestion des patients
+                        </a>
+                        <a href="{{ path('app_admin_chambres_lits') }}" class="list-group-item list-group-item-action" data-turbo="false">
+                            <i class="fas fa-bed"></i> Gestion des chambres & lits
+                        </a>
+                        <a href="{{ path('app_admin_services') }}" class="list-group-item list-group-item-action" data-turbo="false">
+                            <i class="fas fa-hospital"></i> Gestion des services
+                        </a>
+                        <a href="{{ path('app_admin_statistiques') }}" class="list-group-item list-group-item-action" data-turbo="false">
+                            <i class="fas fa-chart-bar"></i> Statistiques
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle"></i>
+        <strong>Attention :</strong> Certaines fonctionnalités de cette page sont en cours de développement et seront disponibles prochainement.
+    </div>
+</div>
+
+<style>
+.card {
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.list-group-item {
+    transition: all 0.2s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    padding-left: 20px;
+}
+</style>
+{% endblock %}
