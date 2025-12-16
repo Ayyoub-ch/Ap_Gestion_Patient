@@ -37,7 +37,7 @@ class InfirmierController extends AbstractController
     }
     
 
-     #[Route('/infirmier/patient/{id}', name: 'infos_patient')]
+     #[Route('/infirmier/patient/{id}', name: 'infos_patient', requirements: ['id' => '\d+'])]
     public function detailPatient(EntityManagerInterface $em,int $id): Response {
         $patients = $em->getRepository(Patient::class)->findById($id);
 
@@ -49,7 +49,7 @@ class InfirmierController extends AbstractController
 
     #[Route('/infirmier/patient/arrivee/{id}', name: 'app_arrivee_patient')]
     public function arriveePatient(EntityManagerInterface $em,int $id): Response {
-        $patients = $em->getRepository(Patient::class)->findByDateEntree($id);
+        $patients = $em->getRepository(Sejour::class)->findByDateEntree($id);
         return $this->render('infirmier/arrivee-patient.html.twig',
          [
             'patients' => $patients

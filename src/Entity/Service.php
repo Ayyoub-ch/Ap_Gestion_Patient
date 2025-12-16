@@ -12,7 +12,7 @@ class Service
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
     #[ORM\Column(length: 50)]
@@ -114,36 +114,6 @@ class Service
             // set the owning side to null (unless already changed)
             if ($chambre->getService() === $this) {
                 $chambre->setService(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Sejour>
-     */
-    public function getSejours(): Collection
-    {
-        return $this->sejours;
-    }
-
-    public function addSejour(Sejour $sejour): static
-    {
-        if (!$this->sejours->contains($sejour)) {
-            $this->sejours->add($sejour);
-            $sejour->setIdService($this);
-        }
-
-        return $this;
-    }
-
-    public function removeSejour(Sejour $sejour): static
-    {
-        if ($this->sejours->removeElement($sejour)) {
-            // set the owning side to null (unless already changed)
-            if ($sejour->getIdService() === $this) {
-                $sejour->setIdService(null);
             }
         }
 

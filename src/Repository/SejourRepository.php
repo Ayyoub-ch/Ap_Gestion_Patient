@@ -21,7 +21,7 @@ class SejourRepository extends ServiceEntityRepository
             ->join('s.patient' , 'p')->addSelect('p')
             ->join('s.chambre', 'c')->addSelect('c')
             ->where('s.service = :serviceId')
-            ->andWhere('s.dateDebutPrevue = :today')
+            ->andWhere('s.date_entree = :today')
             ->setParameter('serviceId', $serviceId)
             ->setParameter('today', new \DateTimeImmutable('today'))
             ->orderBy('p.nom', 'ASC');
@@ -30,7 +30,7 @@ class SejourRepository extends ServiceEntityRepository
     }
     public function findSejourDateJour(): array 
     {
-       $today = new \DateTime('today');
+       $today = new \DateTime('today'); 
 
        return $this->createQueryBuilder('s')
               ->andWhere('s.date_entree <= :today')
@@ -38,13 +38,13 @@ class SejourRepository extends ServiceEntityRepository
               ->setParameter('today', $today)
               ->getQuery()
               ->getResult();
-    }
+    }   
     public function findByDateEntree($id): array 
     {
        $today = new \DateTime('today');
 
        return $this->createQueryBuilder('s')
-            ->join('s.patient', 'p')
+                ->join('s.patient', 'p')
               ->andWhere('s.patient = :id')
               ->andWhere('s.date_entree = :today')
               ->setParameter('id', $id)
@@ -52,7 +52,6 @@ class SejourRepository extends ServiceEntityRepository
               ->getQuery()
               ->getResult();
     }
-    
     public function findByDateSortie($id){
         $em = $this->getEntityManager();
 
