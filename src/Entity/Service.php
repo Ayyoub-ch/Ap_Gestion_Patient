@@ -27,13 +27,20 @@ class Service
     /**
      * @var Collection<int, Chambre>
      */
-    #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'chambre')]
+    #[ORM\OneToMany(targetEntity: Chambre::class, mappedBy: 'service')]
     private Collection $chambres;
+
+    /**
+     * @var Collection<int, Sejour>
+     */
+    #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'id_service')]
+    private Collection $sejours;
 
     public function __construct()
     {
         $this->utilisateurs = new ArrayCollection();
         $this->chambres = new ArrayCollection();
+        $this->sejours = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -107,6 +114,39 @@ class Service
             // set the owning side to null (unless already changed)
             if ($chambre->getService() === $this) {
                 $chambre->setService(null);
+<<<<<<< HEAD
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sejour>
+     */
+    public function getSejours(): Collection
+    {
+        return $this->sejours;
+    }
+
+    public function addSejour(Sejour $sejour): static
+    {
+        if (!$this->sejours->contains($sejour)) {
+            $this->sejours->add($sejour);
+            $sejour->setIdService($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSejour(Sejour $sejour): static
+    {
+        if ($this->sejours->removeElement($sejour)) {
+            // set the owning side to null (unless already changed)
+            if ($sejour->getIdService() === $this) {
+                $sejour->setIdService(null);
+=======
+>>>>>>> 51d49c6bd203afb60d5bcb988e970e3a3f9fec52
             }
         }
 

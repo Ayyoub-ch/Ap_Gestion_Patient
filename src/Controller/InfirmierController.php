@@ -41,9 +41,27 @@ final class InfirmierController extends AbstractController
     public function afficherPatient(EntityManagerInterface $em,int $id): Response {
         $patients = $em->getRepository(Patient::class)->findById($id);
         return $this->render('infirmier/index_consultation.html.twig',
+            [
+                'patients' => $patients
+            ]); 
+    }
+
+    #[Route('/infirmier/sejour/dateJour', name: 'app_infirmier_sejour')]
+    public function afficherSejourDateJour(EntityManagerInterface $em): Response {
+        
+        $sejours = $em->getRepository(Sejour::class)->findSejourDateJour();
+        return $this->render('infirmier/sejours-list-jour.html.twig', [
+            'sejours' => $sejours
+        ]);
+    }
+    
+    #[Route('/infirmier/patient/{id}', name: 'infirmier_patient')]
+    public function arriveePatient(EntityManagerInterface $em,int $id): Response {
+        $patients = $em->getRepository(Patient::class)->findByDateEntree($id);
+        return $this->render('infirmier/patient-list.html.twig',
          [
             'patients' => $patients
         ]);
     }
-
+}
 }

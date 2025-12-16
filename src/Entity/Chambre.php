@@ -37,6 +37,9 @@ class Chambre
     #[ORM\OneToMany(targetEntity: Sejour::class, mappedBy: 'chambre')]
     private Collection $sejours;
 
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'chambres')]
+    private ?Service $service = null;
+
     public function __construct()
     {
         $this->lits = new ArrayCollection();
@@ -140,6 +143,18 @@ class Chambre
                 $sejour->setChambre(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
 
         return $this;
     }
