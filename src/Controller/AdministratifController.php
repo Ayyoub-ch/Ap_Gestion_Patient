@@ -136,7 +136,7 @@ final class AdministratifController extends AbstractController
 
     //Partie Séjour
     #[Route('/sejour', name: 'app_sejour')]
-    public function sejours(): Response
+    public function sejours(ManagerRegistry $doctrine): Response
     {
         $repository = $doctrine->getRepository(Sejour::class);
         $sejours = $repository->findAll(); // Récupère tous les séjours
