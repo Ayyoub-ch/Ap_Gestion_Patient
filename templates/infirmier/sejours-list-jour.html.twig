@@ -23,7 +23,8 @@
             {% for sejour in sejours %}
                 <tr>
                     <td>
-                        {{ sejour.patient.nomPatient }} {{ sejour.patient.prenomPatient }}
+                       <a href="{{ path('infos_patient', {'id': user.id}) }}">
+                       {{ sejour.patient.nomPatient }} {{ sejour.patient.prenomPatient }} </a>
                     </td>
                     <td>{{ sejour.date_entree|date('d/m/Y') }}</td>
                     <td>{{ sejour.chambre.id }}</td>

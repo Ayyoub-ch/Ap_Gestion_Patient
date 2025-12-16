@@ -114,7 +114,6 @@ class Service
             // set the owning side to null (unless already changed)
             if ($chambre->getService() === $this) {
                 $chambre->setService(null);
-<<<<<<< HEAD
             }
         }
 
@@ -145,8 +144,6 @@ class Service
             // set the owning side to null (unless already changed)
             if ($sejour->getIdService() === $this) {
                 $sejour->setIdService(null);
-=======
->>>>>>> 51d49c6bd203afb60d5bcb988e970e3a3f9fec52
             }
         }
 
