@@ -56,12 +56,11 @@ final class InfirmierController extends AbstractController
     }
     
     #[Route('/infirmier/patient/{id}', name: 'infirmier_patient')]
-    public function arriveePatient(EntityManagerInterface $em,int $id): Response {
+    public function afficherPatientParDate(EntityManagerInterface $em,int $id): Response {
         $patients = $em->getRepository(Patient::class)->findByDateEntree($id);
         return $this->render('infirmier/patient-list.html.twig',
          [
             'patients' => $patients
         ]);
     }
-}
 }
