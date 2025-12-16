@@ -32,3 +32,28 @@
     width: 5vw; 
     height: auto; 
 }
+
+/* Style du menu déroulant */
+.nav-list .dropdown {
+    position: relative;
+}
+
+.nav-list .dropdown-menu {
+    background-color: #343a40;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 200px;
+}
+
+.nav-list .dropdown-item {
+    color: var(--text-light);
+    padding: 10px 20px;
+}
+
+.nav-list .dropdown-item:hover {
+    background-color: #495057;
+    color: #fff;
+}
+
+.nav-list .dropdown-divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}

@@ -6,15 +6,36 @@
             </a>
         </div>
         <ul class="nav-list">
-        
             {% if is_granted('ROLE_USER') %}
                 <li><a href="{{ path('app_main') }}">Accueil</a></li>
             {% endif %}
 
-            {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('app_admin_dashboard') }}">Dashboard</a></li>
-                <li><a href="{{ path('app_admin_users') }}">Utilisateurs</a></li>
-                <li><a href="{{ path('app_admin_services') }}">Services</a></li>
+            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_INFIRMIER') %}
+                <!-- Menu déroulant pour l'admin -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Administrateur
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_admin_dashboard') }}">Tableau de bord</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_users') }}">Utilisateurs</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_admin_services') }}">Services</a></li>
+                    </ul>
+                </li>
+            {% endif %}
+
+            {% if is_granted('ROLE_ADMINISTRATIF') %}
+                <!-- Menu déroulant pour l'administratif -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" id="administratifDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Gestion
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_administratif') }}">Tableau de bord</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_patient') }}">Patients</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_sejour') }}">Séjours</a></li>
+                    </ul>
+                </li>
             {% endif %}
 
             {% if is_granted('IS_AUTHENTICATED_FULLY') %}

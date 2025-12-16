@@ -19,7 +19,7 @@ final class AdministratifController extends AbstractController
     }
     
     //Partie Patient
-    #[Route('/patient', name: 'app_patient')]
+    #[Route('/administratif/patient', name: 'app_patient')]
     public function patients(ManagerRegistry $doctrine): Response
     {
         $repository = $doctrine->getRepository(Patient::class);
