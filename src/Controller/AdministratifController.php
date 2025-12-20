@@ -165,10 +165,19 @@ final class AdministratifController extends AbstractController
     }
 
     #[Route('/administratif/ajoutSejour', name: 'app_ajout_sejour', methods: ['GET'])]
-    public function afficherFormulaireSejour(): Response
+    public function afficherFormulaireSejour(ManagerRegistry $doctrine): Response
     {
-        // Affiche juste le formulaire
-        return $this->render('administratif/ajouter_sejour.html.twig');
+        // Récupération des listes pour les selects
+        $patientRepository = $doctrine->getRepository(Patient::class);
+        $chambreRepository = $doctrine->getRepository(\App\Entity\Chambre::class);
+        
+        $patients = $patientRepository->findAll();
+        $chambres = $chambreRepository->findAll();
+        
+        return $this->render('administratif/ajouter_sejour.html.twig', [
+            'patients' => $patients,
+            'chambres' => $chambres,
+        ]);
     }
 
     /* Ajouter un patient */
@@ -189,6 +198,21 @@ final class AdministratifController extends AbstractController
         $sejour->setDateSortie(new \DateTime($date_sortie));
         $sejour->setLibelle($libelle);
         $sejour->setStatutDuJour($statut_du_jour);
+
+        // Gestion des relations
+        $patientId = $request->request->get('patient_id');
+        $patientRepository = $doctrine->getRepository(Patient::class);
+        if ($patientId) {
+            $patient = $patientRepository->find($patientId);
+            $sejour->setPatient($patient);
+        }
+
+        $chambreId = $request->request->get('chambre_id');
+        $chambreRepository = $doctrine->getRepository(\App\Entity\Chambre::class);
+        if ($chambreId) {
+            $chambre = $chambreRepository->find($chambreId);
+            $sejour->setChambre($chambre);
+        }
 
         // Sauvegarde
         $em->persist($sejour);
