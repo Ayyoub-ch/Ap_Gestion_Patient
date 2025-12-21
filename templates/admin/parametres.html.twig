@@ -84,6 +84,20 @@
                     <h5 class="mb-0"><i class="fas fa-tools"></i> Outils d'administration</h5>
                 </div>
                 <div class="card-body">
+                    {% for message in app.flashes('success') %}
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
+                    {% for message in app.flashes('error') %}
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    {% endfor %}
+
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <div class="card border-primary">
@@ -91,9 +105,12 @@
                                     <i class="fas fa-database fa-3x text-primary mb-3"></i>
                                     <h5 class="card-title">Base de données</h5>
                                     <p class="card-text">Gérer les migrations et la structure</p>
-                                    <button class="btn btn-primary btn-sm" disabled>
-                                        <i class="fas fa-sync"></i> Migrations
-                                    </button>
+                                    <form method="post" action="{{ path('app_admin_parametres_db_info') }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('db_info') }}">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="fas fa-info-circle"></i> Info DB
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -104,22 +121,25 @@
                                     <i class="fas fa-broom fa-3x text-warning mb-3"></i>
                                     <h5 class="card-title">Cache</h5>
                                     <p class="card-text">Vider le cache de l'application</p>
-                                    <button class="btn btn-warning btn-sm" disabled>
-                                        <i class="fas fa-trash"></i> Vider le cache
-                                    </button>
+                                    <form method="post" action="{{ path('app_admin_parametres_clear_cache') }}" class="d-inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('clear_cache') }}">
+                                        <button type="submit" class="btn btn-warning btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir vider le cache ?')">
+                                            <i class="fas fa-trash"></i> Vider le cache
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div class="card border-danger">
+                            <div class="card border-success">
                                 <div class="card-body text-center">
-                                    <i class="fas fa-file-alt fa-3x text-danger mb-3"></i>
-                                    <h5 class="card-title">Logs</h5>
-                                    <p class="card-text">Consulter les journaux d'erreurs</p>
-                                    <button class="btn btn-danger btn-sm" disabled>
-                                        <i class="fas fa-eye"></i> Voir les logs
-                                    </button>
+                                    <i class="fas fa-shield-alt fa-3x text-success mb-3"></i>
+                                    <h5 class="card-title">Sécurité</h5>
+                                    <p class="card-text">Paramètres de sécurité</p>
+                                    <a href="{{ path('app_admin_users') }}" class="btn btn-success btn-sm">
+                                        <i class="fas fa-users-cog"></i> Gérer utilisateurs
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -158,9 +178,51 @@
         </div>
     </div>
 
-    <div class="alert alert-warning">
-        <i class="fas fa-exclamation-triangle"></i>
-        <strong>Attention :</strong> Certaines fonctionnalités de cette page sont en cours de développement et seront disponibles prochainement.
+    <div class="row">
+        <div class="col-md-12 mb-4">
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0"><i class="fas fa-server"></i> Statistiques serveur</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-hdd fa-2x text-primary mb-2"></i>
+                                <h6>Espace disque</h6>
+                                <p class="text-muted">Disponible</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-memory fa-2x text-success mb-2"></i>
+                                <h6>Mémoire PHP</h6>
+                                <p class="text-muted">{{ constant('PHP_VERSION') }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-calendar fa-2x text-info mb-2"></i>
+                                <h6>Dernière MAJ</h6>
+                                <p class="text-muted">{{ "now"|date("d/m/Y") }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <div class="text-center">
+                                <i class="fas fa-clock fa-2x text-warning mb-2"></i>
+                                <h6>Uptime serveur</h6>
+                                <p class="text-muted">En ligne</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle"></i>
+        <strong>Information :</strong> Les outils d'administration vous permettent de gérer efficacement votre application.
     </div>
 </div>
 

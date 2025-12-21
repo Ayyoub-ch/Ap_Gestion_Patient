@@ -1,2 +1,7 @@
-// Le code de gestion des dropdowns est maintenant dans base.html.twig
-// pour garantir qu'il s'exécute après le chargement de Bootstrap
+/**
+ * Header JavaScript
+ * Les dropdowns Bootstrap sont maintenant initialisés directement dans base.html.twig
+ * pour éviter les conflits avec Turbo et les import maps
+ */
+
+console.log('Header module loaded');

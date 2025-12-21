@@ -1,0 +1,197 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails du patient{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .patient-details {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .info-row {
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        .info-row:last-child {
+            border-bottom: none;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #495057;
+            min-width: 150px;
+            display: inline-block;
+        }
+        .info-value {
+            color: #212529;
+        }
+        .sejour-card {
+            border-left: 4px solid #007bff;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+        .sejour-card.active {
+            border-left-color: #28a745;
+            background: #d4edda;
+        }
+        .sejour-card.termine {
+            border-left-color: #6c757d;
+            background: #e9ecef;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="fas fa-user-injured"></i> Détails du patient</h1>
+        <a href="{{ path('app_admin_patients') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="patient-details">
+                <h3 class="mb-4">Informations personnelles</h3>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-hashtag"></i> ID :</span>
+                    <span class="info-value">{{ patient.id }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-user"></i> Nom :</span>
+                    <span class="info-value">{{ patient.nom }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-user"></i> Prénom :</span>
+                    <span class="info-value">{{ patient.prenom }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-phone"></i> Téléphone :</span>
+                    <span class="info-value">{{ patient.telephone }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-venus-mars"></i> Sexe :</span>
+                    <span class="info-value">{{ patient.sexe }}</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-map-marker-alt"></i> Localité :</span>
+                    <span class="info-value">
+                        {% if patient.localite %}
+                            {{ patient.localite.nom }}
+                        {% else %}
+                            <span class="text-muted">Non renseignée</span>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label"><i class="fas fa-sticky-note"></i> Note :</span>
+                    <span class="info-value">{{ patient.note ?: 'Aucune note' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-bed"></i> Statistiques</h5>
+                </div>
+                <div class="card-body">
+                    <div class="text-center mb-3">
+                        <h2 class="text-primary mb-0">{{ patient.sejours|length }}</h2>
+                        <small class="text-muted">Séjour(s) total</small>
+                    </div>
+                    
+                    {% set sejoursActifs = 0 %}
+                    {% for sejour in patient.sejours %}
+                        {% if sejour.dateSortie is null %}
+                            {% set sejoursActifs = sejoursActifs + 1 %}
+                        {% endif %}
+                    {% endfor %}
+                    
+                    <div class="text-center">
+                        <h3 class="text-success mb-0">{{ sejoursActifs }}</h3>
+                        <small class="text-muted">Séjour(s) en cours</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-hospital"></i> Historique des séjours</h5>
+                </div>
+                <div class="card-body">
+                    {% if patient.sejours|length > 0 %}
+                        {% for sejour in patient.sejours %}
+                            <div class="sejour-card {% if sejour.dateSortie is null %}active{% else %}termine{% endif %}">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <strong>
+                                            {% if sejour.dateSortie is null %}
+                                                <span class="badge bg-success">En cours</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Terminé</span>
+                                            {% endif %}
+                                        </strong>
+                                        <p class="mb-1 mt-2">
+                                            <i class="fas fa-calendar-check"></i> 
+                                            <strong>Date d'entrée :</strong> {{ sejour.dateEntree|date('d/m/Y') }}
+                                        </p>
+                                        {% if sejour.dateSortie %}
+                                            <p class="mb-1">
+                                                <i class="fas fa-calendar-times"></i> 
+                                                <strong>Date de sortie :</strong> {{ sejour.dateSortie|date('d/m/Y') }}
+                                            </p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col-md-6">
+                                        {% if sejour.lit %}
+                                            <p class="mb-1">
+                                                <i class="fas fa-bed"></i> 
+                                                <strong>Lit :</strong> {{ sejour.lit.numero }}
+                                            </p>
+                                            {% if sejour.lit.chambre %}
+                                                <p class="mb-1">
+                                                    <i class="fas fa-door-open"></i> 
+                                                    <strong>Chambre :</strong> {{ sejour.lit.chambre.numero }} - Étage {{ sejour.lit.chambre.etage }}
+                                                </p>
+                                                {% if sejour.lit.chambre.chambre %}
+                                                    <p class="mb-1">
+                                                        <i class="fas fa-hospital"></i> 
+                                                        <strong>Service :</strong> {{ sejour.lit.chambre.chambre.nom }}
+                                                    </p>
+                                                {% endif %}
+                                            {% endif %}
+                                        {% else %}
+                                            <p class="text-muted">Pas de lit assigné</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="alert alert-info mb-0">
+                            <i class="fas fa-info-circle"></i> Aucun séjour enregistré pour ce patient.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

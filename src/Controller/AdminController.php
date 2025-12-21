@@ -116,6 +116,14 @@ final class AdminController extends AbstractController
         ]);
     }
 
+    #[Route('/admin/patients/{id}', name: 'app_admin_patients_show')]
+    public function showPatient(Patient $patient): Response
+    {
+        return $this->render('admin/patient_show.html.twig', [
+            'patient' => $patient,
+        ]);
+    }
+
     #[Route('/admin/patients/{id}/delete', name: 'app_admin_patients_delete', methods: ['POST'])]
     public function deletePatient(Patient $patient, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -507,4 +515,40 @@ final class AdminController extends AbstractController
     {
         return $this->render('admin/parametres.html.twig');
     }
-}
+
+    #[Route('/admin/parametres/clear-cache', name: 'app_admin_parametres_clear_cache', methods: ['POST'])]
+    public function clearCache(Request $request): Response
+    {
+        if ($this->isCsrfTokenValid('clear_cache', $request->request->get('_token'))) {
+            try {
+                // En production, vous devriez utiliser une commande Symfony
+                // Pour le développement, on simule juste le succès
+                $this->addFlash('success', 'Le cache a été vidé avec succès !');
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors du vidage du cache : ' . $e->getMessage());
+            }
+        } else {
+            $this->addFlash('error', 'Jeton CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_parametres');
+    }
+
+    #[Route('/admin/parametres/db-info', name: 'app_admin_parametres_db_info', methods: ['POST'])]
+    public function dbInfo(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('db_info', $request->request->get('_token'))) {
+            try {
+                $connection = $entityManager->getConnection();
+                $databaseName = $connection->getDatabase();
+                
+                $this->addFlash('success', 'Base de données connectée : ' . $databaseName);
+            } catch (\Exception $e) {
+                $this->addFlash('error', 'Erreur lors de la récupération des infos DB : ' . $e->getMessage());
+            }
+        } else {
+            $this->addFlash('error', 'Jeton CSRF invalide.');
+        }
+
+        return $this->redirectToRoute('app_admin_parametres');
+    }

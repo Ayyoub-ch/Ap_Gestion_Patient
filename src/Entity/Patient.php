@@ -125,7 +125,7 @@ class Patient
     /**
      * @return Collection<int, Sejour>
      */
-    public function getSejour(): Collection
+    public function getSejours(): Collection
     {
         return $this->sejours;
     }
