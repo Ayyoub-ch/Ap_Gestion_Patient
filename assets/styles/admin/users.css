@@ -58,6 +58,11 @@
     color: white;
 }
 
+.badge.bg-third {
+    background-color: #e219bd !important;
+    color: #212529;
+}
+
 /* Cards */
 .card {
     border: 1px solid #dee2e6;

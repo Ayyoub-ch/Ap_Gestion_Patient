@@ -12,8 +12,14 @@
             {% endif %}
 
             {% if is_granted('ROLE_ADMINISTRATIF') %}
-                <li><a href="{{ path('app_administratif') }}">Dashboard</a></li>
+                <li><a href="{{ path('app_administratif') }}">Administratif</a></li>
+                <li><a href="{{ path('app_patient') }}">Patients</a></li>
                 <li><a href="{{ path('app_sejour') }}">Séjours</a></li>
+            {% endif %}
+
+            {% if is_granted('ROLE_INFIRMIER') %}
+                <li><a href="{{ path('app_gestion') }}">Gestion</a></li>
+                <li><a href="{{ path('app_consultation') }}">Consultation</a></li>
             {% endif %}
 
             {% if is_granted('ROLE_ADMIN') %}

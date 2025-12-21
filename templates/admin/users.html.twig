@@ -56,6 +56,8 @@
                                             <span class="badge bg-warning">Administratif</span>
                                         {% elseif role == 'ROLE_USER' %}
                                             <span class="badge bg-secondary">Utilisateur</span>
+                                        {% elseif role == 'ROLE_INFIRMIER' %}
+                                            <span class="badge bg-third">Infirmier</span>
                                         {% endif %}
                                     {% endfor %}
                                 </td>

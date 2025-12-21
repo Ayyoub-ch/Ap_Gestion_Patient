@@ -45,6 +45,7 @@ class UserFormType extends AbstractType
                     'Utilisateur' => 'ROLE_USER',
                     'Administratif' => 'ROLE_ADMINISTRATIF',
                     'Administrateur' => 'ROLE_ADMIN',
+                    'Infirmier' => 'ROLE_INFIRMIER',
                 ],
                 'multiple' => true,
                 'expanded' => true,
