@@ -10,7 +10,7 @@
                 <li><a href="{{ path('app_main') }}">Accueil</a></li>
             {% endif %}
 
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_INFIRMIER') %}
+            {% if is_granted('ROLE_ADMIN') %}
                 <!-- Menu déroulant pour l'admin -->
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

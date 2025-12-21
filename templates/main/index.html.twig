@@ -1,15 +1,52 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hopital{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
+
+{% block title %}Accueil - Hôpital{% endblock %}
 
 {% block body %}
-{% if not app.user %}
-    <section id="no-connect">
-        <p>Vous etes pas encore connecté<p/>
-    </section>
-  {% else %}
-    <section id="connect">
-        <p>Vous etes connecté<p/>
-    </section>
-  {% endif %}
+<section class="hero bg-light py-5">
+    <div class="container text-center">
+        <img src="{{ asset('img/logo/logo.png') }}" alt="Logo" class="mb-3 hero-logo">
+        <h1 class="hero-title">Bienvenue à l'Hôpital</h1>
+        <p class="hero-subtitle">Portail de gestion des patients et des séjours — simple et sécurisé.</p>
+
+        {% if not app.user %}
+            <div class="d-flex justify-content-center gap-3 mt-4">
+                <a href="{{ path('app_register') }}" class="btn btn-primary btn-lg">S'inscrire</a>
+                <a href="{{ path('app_login') }}" class="btn btn-outline-dark btn-lg">Se connecter</a>
+            </div>
+        {% else %}
+            <p class="mt-4 lead">Bonjour <strong>{{ app.user.prenom }} {{ app.user.nom }}</strong></p>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <a href="{{ path('app_profile') }}" class="btn btn-primary">Mon profil</a>
+                <a href="{{ path('app_logout') }}" class="btn btn-outline-danger">Se déconnecter</a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="container py-5">
+    <div class="row text-center">
+        <div class="col-md-4 mb-4">
+            <h4>Gestion patients</h4>
+            <p>Ajouter, modifier et suivre les dossiers patients.</p>
+            <a href="{{ path('app_patient') }}" class="big-button">Accéder</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h4>Gestion séjours</h4>
+            <p>Suivre les admissions et sorties.</p>
+            <a href="{{ path('app_sejour') }}" class="big-button">Accéder</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <h4>Services &amp; Chambres</h4>
+            <p>Consulter les services, chambres et lits.</p>
+            <a href="{{ path('app_admin_services') }}" class="big-button">Accéder</a>
+        </div>
+    </div>
+</section>
+
 {% endblock %}
