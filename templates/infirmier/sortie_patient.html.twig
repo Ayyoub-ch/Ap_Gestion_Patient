@@ -1,0 +1,60 @@
+{% extends 'base.html.twig' %}
+{% block title %}Sortie du patient{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/patient.css') }}">
+{% endblock %}
+{% block body %}
+
+    <div class="card">
+        <div class="card-header">
+            <h2>Gérer les sorties des patients</h2>
+        </div>
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date de Sortie</th>
+                            <th>Libelle</th>
+                            <th>Nom du patient</th>
+                            <th>Prenom du patient</th>
+                            <th>Date de sortie du patient </th>
+                            <th>Note</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for sejour in sejours %}
+                            <tr>
+                                <td>{{ sejour.id }}</td>
+                                <td>{{ sejour.date_sortie }}</td>
+                                <td>{{ sejour.libelle }}</td>  
+                                <td>{{ sejour.patient.nom }}</td> 
+                                <td>{{ sejour.patient.prenom }}</td>
+                                <td>{{ patient.note }}</td>
+                                <td> <button type="button" class="btn btn-success">✅​Valider la sortie</button> </td>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="text-center text-muted">
+                                    Aucun sejour trouvé
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

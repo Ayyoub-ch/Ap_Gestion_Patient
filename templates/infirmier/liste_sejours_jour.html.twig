@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block title %}Séjours débutant aujourd'hui{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/index.css') }}">
+{% endblock %}
+
 {% block body %}
     <h1>Liste des séjours à la date du {{ "now"|date("d/m/Y") }} </h1>
 
@@ -9,8 +14,7 @@
             Aucun séjour ne débute aujourd'hui pour votre service.
         </div>
     {% else %}
-    <div class="">
-
+    <div class="container-center">
         <table class="table table-striped">
             <thead>
                 <tr>

@@ -7,61 +7,51 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use App\Entity\Patient;
 use App\Entity\Sejour;
+use App\Repository\PatientRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Repository\SejourRepository;
 
 class InfirmierController extends AbstractController
 {
-    #[Route('/infirmier', name: 'app_infirmier')]
+    #[Route('/infirmier/', name: 'app_infirmier')]
     public function index(): Response
     {
-    return $this->render('infirmier/index.html.twig',);
+        return $this->render('infirmier/index.html.twig');
     }
 
-    // Consultation des séjours des patients
-    #[Route('/infirmier/consultation', name: 'app_consultation')]
-    public function afficherPatient(EntityManagerInterface $em,int $id): Response {
-        $patients = $em->getRepository(Patient::class)->findById($id);
-        return $this->render('infirmier/index_consultation.html.twig',
-            [
-                'patients' => $patients
-            ]); 
+    //Gestion des séjours des patients
+    #[Route('/infirmier/sejours', name: 'app_gestion')]
+    public function gestionSejours(): Response {
+        return $this->render('infirmier/index_gestion.html.twig'); 
     }
 
-    #[Route('/infirmier/sejour/dateJour', name: 'app_infirmier_sejour')]
-    public function afficherSejourDateJour(EntityManagerInterface $em): Response {
-        
-        $sejours = $em->getRepository(Sejour::class)->findSejourDateJour();
-        return $this->render('infirmier/sejours-list-jour.html.twig', [
+
+    #[Route('/infirmier/sejour/arrivee', name: 'app_arrivee')]
+    public function arriveePatient(EntityManagerInterface $em, SejourRepository $sejours): Response {
+        $sejours = $em->getRepository(Sejour::class)->findByArriveeJour(new \DateTimeImmutable('today'));
+        return $this->render('infirmier/arrivee_patient.html.twig',
+         [
             'sejours' => $sejours
         ]);
     }
-    
 
-     #[Route('/infirmier/patient/{id}', name: 'infos_patient', requirements: ['id' => '\d+'])]
-    public function detailPatient(EntityManagerInterface $em,int $id): Response {
-        $patients = $em->getRepository(Patient::class)->findById($id);
 
-        return $this->render('infirmier/patient-list.html.twig',
+    #[Route('/infirmier/patient/sortie', name: 'app_sortie')]
+    public function sortiePatient(EntityManagerInterface $em, SejourRepository $sejours): Response {
+        $sejours = $em->getRepository(Sejour::class)->findBySortieJour(new \DateTimeImmutable('today'));
+        return $this->render('infirmier/sortie_patient.html.twig',
          [
-            'patients' => $patients
+            'sejours' => $sejours
         ]);
     }
 
-    #[Route('/infirmier/patient/arrivee/{id}', name: 'app_arrivee_patient')]
-    public function arriveePatient(EntityManagerInterface $em,int $id): Response {
-        $patients = $em->getRepository(Sejour::class)->findByDateEntree($id);
-        return $this->render('infirmier/arrivee-patient.html.twig',
-         [
-            'patients' => $patients
-        ]);
-    }
-     #[Route('/infirmier/patient/sortie/{id}', name: 'app_sortie_patient')]
-    public function sortiePatient(EntityManagerInterface $em,int $id): Response {
-        $patients = $em->getRepository(Patient::class)->findByDateSortie($id);
-        return $this->render('infirmier/sortie-patient.html.twig',
-         [
-            'patients' => $patients
-        ]);
+
+    //Partie Consulation
+
+    // Consultation des séjours des patients
+    #[Route('/infirmier/consultation', name: 'app_consultation')]
+    public function consultationSejours(): Response {
+        return $this->render('infirmier/index_consultation.html.twig'); 
     }
 
 }

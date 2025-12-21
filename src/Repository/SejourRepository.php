@@ -16,9 +16,10 @@ class SejourRepository extends ServiceEntityRepository
         parent::__construct($registry, Sejour::class);
     }
 
-    public function findStartTodayService(int $serviceId) {
+    public function findStartTodayService(int $serviceId)
+    {
         $qb = $this->createQueryBuilder('s')
-            ->join('s.patient' , 'p')->addSelect('p')
+            ->join('s.patient', 'p')->addSelect('p')
             ->join('s.chambre', 'c')->addSelect('c')
             ->where('s.service = :serviceId')
             ->andWhere('s.date_entree = :today')
@@ -28,42 +29,28 @@ class SejourRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
-    public function findSejourDateJour(): array 
+
+
+    public function findByArriveeJour(\DateTimeInterface $date)
     {
-       $today = new \DateTime('today'); 
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.date_entree = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->orderBy('s.date_entree', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-       return $this->createQueryBuilder('s')
-              ->andWhere('s.date_entree <= :today')
-              ->andWhere('s.date_sortie >= :today')
-              ->setParameter('today', $today)
-              ->getQuery()
-              ->getResult();
-    }   
-    public function findByDateEntree($id): array 
+    public function findBySortieJour(\DateTimeInterface $date)
     {
-       $today = new \DateTime('today');
-
-       return $this->createQueryBuilder('s')
-                ->join('s.patient', 'p')
-              ->andWhere('s.patient = :id')
-              ->andWhere('s.date_entree = :today')
-              ->setParameter('id', $id)
-              ->setParameter('today', $today)
-              ->getQuery()
-              ->getResult();
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.date_sortie = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->orderBy('s.date_sortie', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
-    public function findByDateSortie($id){
-        $em = $this->getEntityManager();
-
-        $query = $em->createQueryBuilder()
-            ->select('s')
-            ->from('App\Entity\Sejour', 's')
-            ->where('s.date_sortie IS NOT NULL')
-            ->andWhere('s.date_sortie = CURRENT_DATE()')
-            ->orderBy('s.date_sortie', 'DESC');
-
-        return $query->getQuery()->getResult();
-    }
+    
     //    /**
     //     * @return Sejour[] Returns an array of Sejour objects
     //     */
